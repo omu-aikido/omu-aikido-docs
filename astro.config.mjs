@@ -5,26 +5,42 @@ import markdoc from '@astrojs/markdoc';
 
 // https://astro.build/config
 export default defineConfig({
-	integrations: [
-		markdoc(),
-		starlight({
-			title: 'My Docs',
-			social: {
-				github: 'https://github.com/withastro/starlight',
-			},
-			sidebar: [
-				{
-					label: 'Guides',
-					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
-					],
-				},
-				{
-					label: 'Reference',
-					autogenerate: { directory: 'reference' },
-				},
-			],
-		}),
-	],
+    integrations: [
+        markdoc(),
+        starlight({
+            title: "OMU-AIKIDO Docs",
+            defaultLocale: "root",
+            locales: {
+                root: {
+                    label: "日本語",
+                    lang: "ja",
+                },
+            },
+            social: {
+                github: "https://github.com/omu-aikido",
+            },
+            sidebar: [
+                {
+                    label: "Start Up",
+                    items: [
+                        { label: "ようこそ", link: "/start-up/welcome" },
+                        { label: "サインアップ", link: "/start-up/sign-up" },
+                        { label: "アカウント", link: "/start-up/account" },
+                    ],
+                },
+                {
+                    label: "Guides",
+                    autogenerate: { directory: "guides" },
+                },
+                {
+                    label: "Admin",
+                    autogenerate: { directory: "admin" },
+                },
+                {
+                    label: "Reference",
+                    autogenerate: { directory: "reference" },
+                },
+            ],
+        }),
+    ],
 });

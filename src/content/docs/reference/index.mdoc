@@ -1,0 +1,197 @@
+---
+title: 開発を始める
+description: アプリのロジックなどを説明します。
+---
+
+この章では、アプリのコードの詳細について説明します。
+
+実装は[GitHub](https://github.com/omu-aikido/omu-aikido-app)で管理されています。
+
+アプリの体験の向上や新機能の追加など、開発に関する情報を提供します。
+
+フォークやプルリクエストはいつでも歓迎します。
+
+## プロジェクトについて
+
+このプロジェクトは[Astro.js](https://astro.build)を使用して構築されているフルスタックアプリケーションです。
+
+### 使用しているツールなど
+
+{% cardgrid %}
+{% linkcard
+    title="npm"
+    href="https://www.npmjs.com"
+    description="パッケージ管理"
+    target="_blank"
+    rel="noopener noreferrer" /%}
+{% linkcard
+    title="volta"
+    href="https://volta.sh"
+    description="Node.jsバージョン管理"
+    target="_blank"
+    rel="noopener noreferrer" /%}
+{% linkcard
+    title="Astro.js"
+    href="https://astro.build"
+    description="フレームワーク"
+    target="_blank"
+    rel="noopener noreferrer" /%}
+{% linkcard
+    title="GitHub"
+    href="https://github.com"
+    description="ソースコード管理"
+    target="_blank"
+    rel="noopener noreferrer" /%}
+{% linkcard
+    title="Catppuccin"
+    href="https://catppuccin.com"
+    description="カラーパレット"
+    target="_blank"
+    rel="noopener noreferrer" /%}
+{% linkcard
+    title="Clerk"
+    href="https://clerk.com"
+    description="認証"
+    target="_blank"
+    rel="noopener noreferrer" /%}
+{% linkcard
+    title="Turso"
+    href="https://turso.tech"
+    description="libSQLデータベース"
+    target="_blank"
+    rel="noopener noreferrer" /%}
+{% linkcard
+    title="Drizzle"
+    href="https://orm.drizzle.team"
+    description="ORM"
+    target="_blank"
+    rel="noopener noreferrer" /%}
+{% linkcard
+    title="ts-ics"
+    href="https://github.com/Neuvernetzung/ts-ics"
+    description="iCalendar生成"
+    target="_blank"
+    rel="noopener noreferrer" /%}
+{% linkcard
+    title="CloudFlare Pages"
+    href="https://pages.cloudflare.com"
+    description="ホスティング"
+    target="_blank"
+    rel="noopener noreferrer" /%}
+{% /cardgrid %}
+
+### ディレクトリ構造
+
+プロジェクトのディレクトリ構造は以下の通りです。
+
+{% filetree %}
+- db
+    - relations.ts
+    - schema.ts
+- public
+    - favicon.ico
+    - robots.txt
+- README.md
+- LICENSE
+- src
+    - components
+        - root/
+        - ui/
+    - layouts
+        - baselayout.astro
+        - auth-layout.astro
+        - non-auth-layout.astro
+    - lib
+        - drizzle.ts
+        - query/
+    - pages
+        - account/
+        - admin/
+        - apps
+            - record/
+            - …
+        - dashboard.astro
+        - index.astro
+        - news.astro
+    - styles
+        - global.css
+    - class.ts
+    - const.ts
+    - middleware.ts
+    - type.d.ts
+    - utils.ts
+    - zod.ts
+- astro.config.mjs
+- drizzle.config.ts
+- env.d.ts
+- package.json
+- package-lock.json
+- tsconfig.json
+- worker-configuration.d.ts
+- wrangler.json
+{% /filetree %}
+
+
+## 開発環境のセットアップ
+
+### 必要なツール
+
+{% steps %}
+1. Gitをダウンロードします  
+    Gitはソースコードのバージョン管理ツールです。
+    [Gitの公式サイト](https://git-scm.com/downloads)からダウンロードしてください。
+
+1. Voltaをインストールします。  
+   VoltaはNode.jsバージョン管理ツールで、プロジェクトごとに適切なNode.jsのバージョンを自動で有効にします。  
+   詳細は[Voltaの公式サイト](https://volta.sh)をご参照ください。
+
+1. Node.jsをインストールします。  
+    ```bash
+    # Node.jsのバージョンを指定してインストール
+    volta install node@22.13.0
+    # npmのバージョンを指定してインストール
+    volta install npm@11
+    ```
+
+1. プロジェクトをクローンします:
+    ```bash
+    git clone 'https://github.com/omu-aikido/omu-aikido-app.git'
+    ```
+    このコマンドでプロジェクトのソースコードがダウンロードされます。
+
+
+1. プロジェクトのルートディレクトリに移動し、依存関係をインストールします:
+    ```bash
+    npm install
+    ```
+    このコマンドでpackage.jsonに記載のパッケージが一括で導入されます。
+
+1. プロジェクトの環境変数を設定します:
+    ```
+    .env.development  
+    .dev.vars.development  
+    ```
+    必要な情報は次の通りです:  
+    - PUBLIC_CLERK_PUBLISHABLE_KEY
+    - CLERK_SECRET_KEY
+    - TURSO_DATABASE_URL
+    - TURSO_AUTH_TOKEN
+
+    各キーファイル例:
+    ```
+    PUBLIC_CLERK_PUBLISHABLE_KEY=your_public_clerk_key
+    CLERK_SECRET_KEY=your_clerk_secret_key
+    TURSO_DATABASE_URL=your_turso_database_url
+    TURSO_AUTH_TOKEN=your_turso_auth_token
+    ```
+    これで環境変数の設定ファイルが作成されます。
+
+1. ローカル開発サーバーを起動します:
+   ```bash
+   npm run dev
+   ```
+   サーバーが起動すると、ターミナル上にURLが表示されるので、ブラウザでアクセスし動作確認を行ってください。
+
+{% /steps %}
+
+これで開発環境の初期設定は完了です。
