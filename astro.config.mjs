@@ -38,7 +38,22 @@ export default defineConfig({
                 },
                 {
                     label: "Reference",
-                    autogenerate: { directory: "reference" },
+                    items: [
+                        { label: "開発を始める", link: "/reference/" },
+                        { label: "Gitの使い方", link: "/reference/git" },
+                        { label: "GitHubの使い方", link: "/reference/github" },
+                        {
+                            label: "内部仕様",
+                            items: [
+                                {
+                                    label: "データベース",
+                                    autogenerate: {
+                                        directory: "/reference/code/db",
+                                    },
+                                },
+                            ],
+                        },
+                    ],
                 },
             ],
         }),
