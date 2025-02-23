@@ -1,0 +1,50 @@
+---
+title: スキーマの解説
+description: 実際のスキーマの構造について解説します。
+---
+
+プロジェクトにおける関連ファイル
+{% filetree %}
+- db
+    - **schema.ts**
+    - **relation.ts**
+- public/
+- src
+    - components/
+    - layouts/
+    - lib
+        - drizzle.ts
+        - query/
+    - pages/
+    - styles/
+    - …
+- astro.config.mjs
+- …
+{% /filetree %}
+
+このアプリの{% $buildDate %}時点での、データベースのスキーマ・リレーションは以下の通りです。
+
+### スキーマ
+
+```typescript
+export const activity = sqliteTable("activity", {
+    id: text().primaryKey(),
+    userId: text().notNull(),
+    date: text().notNull(),
+    period: integer().default(1.5).notNull(),
+    createAt: text().default("sql`(CURRENT_TIMESTAMP)`").notNull(),
+    updatedAt: text(),
+});
+```
+| フィールド名 | 型 |  |
+| --- | --- | --- |
+| id | text | 一意のID。削除や編集時のSlugとして使用されます |
+| userId | text | ClerkアカウントのユーザーIDです |
+| date | text | 稽古をした日付です |
+| period | integer | 稽古の時間です |
+| createAt | text | レコードの作成日時です |
+| updatedAt | text | レコードの更新日時です |
+
+### リレーション
+
+リレーションは存在しません。

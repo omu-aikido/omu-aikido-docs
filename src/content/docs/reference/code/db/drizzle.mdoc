@@ -1,0 +1,143 @@
+---
+title: Drizzle ORMについて
+description: Drizzle ORMについて解説します。
+---
+
+{% filetree %}
+- db
+    - **schema.ts**
+- public/
+- src
+    - components/
+    - layouts/
+    - lib
+        - **drizzle.ts**
+        - query/
+    - pages/
+    - styles/
+    - …
+- astro.config.mjs
+- …
+{% /filetree %}
+
+Drizzle ORMは、TypeScriptで書かれたORMです。
+ORMとは、Object-Relational Mappingの略で、データベースのテーブルをオブジェクトとして扱うためのプログラミングの技法です。
+
+Drizzle ORMでは、データベースのテーブルをTypeScriptのクラスとして扱うことができるので、
+TypeScriptの型システムを活用することで、データベースのテーブルに対する型安全な操作が可能です。
+
+## 使い方
+### スキーマ定義
+
+`/db/schema.ts`でテーブルのスキーマを定義します。
+
+```typescript
+import { pgTable, serial, text, integer } from 'drizzle-orm/pg-core';
+
+const users = pgTable('users', {
+    id: serial('id').primaryKey(),
+    name: text('name').notNull(),
+    age: integer('age'),
+});
+
+```
+
+### 各種クエリの実行
+あらかじめクライアントとスキーマをインポートします
+```typescript
+import { db } from "@/src/lib/drizzle";
+import { users } from "@/./db/schema";
+```
+- 選択
+```typescript
+// 配列を受け取る
+const result = await db.select()
+                       .from(users)
+                       .all();
+
+// 特定の列に限定する
+const nameonly = await db.select({ name: users.name })
+                         .from(users)
+                         .all();
+```
+- 挿入
+
+```typescript
+
+// そのまま挿入
+await db.insert(users)
+        .values({ name: 'John Doe', age: 30 });
+
+// 複数のレコードを挿入
+await db.insert(users)
+        .values([
+            { name: 'Alice', age: 25 },
+            { name: 'Bob', age: 22 },
+        ]);
+
+// スキーマから挿入用の型を取得
+const users_input = users.$inferInsert;
+
+// 定義したスキーマと同じ形式のデータを作成
+const data: typeof users_input = {
+        id: uuid.v4(),
+        name: 'John Doe',
+        age: 25
+};
+// 挿入
+await db.insert(users)
+        .values(data);
+
+```
+
+- 更新
+
+```typescript
+await db.update(users)
+        .set({ age: 31 })
+        .where(
+            eq(users.name, 'John Doe')
+        );
+```
+
+- 削除
+
+```typescript
+await db.delete(users)
+        .where(
+            eq(users.name, 'John Doe')
+         );
+```
+
+- 条件
+
+```typescript
+const result = await db.select()
+                       .from(users)
+                       .where(
+                            eq(users.name, 'Alice') // 名前がAliceのユーザーを取得
+                       )
+                       .all();
+```
+そのほか、`gte`, `lte`, `gt`, `lt`などの条件があります。
+
+
+複数条件は以下のように記述します
+```typescript
+
+await db.select()
+        .from(users)
+        .where(
+            and(
+                eq(users.name, 'Alice'),
+                gte(users.age, 25))
+            )
+        .all();
+
+```
+名前が'Alice'であり、かつ年齢が25以上のすべての行を選択しています。
+
+
+---
+
+詳しくはDrizzle ORMの[ドキュメント](https://orm.drizzle.team/docs/overview)をごらんください。

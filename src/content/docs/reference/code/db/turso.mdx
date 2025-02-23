@@ -1,0 +1,149 @@
+---
+title: Tursoとの接続
+description: Tursoとの接続方法について解説します。
+---
+
+import { FileTree } from '@astrojs/starlight/components';
+
+<FileTree>
+-   db/
+-   public/
+-   src
+    -   components/
+    -   layouts/
+    -   lib/
+    -   pages/
+    -   styles/
+    -   …
+-   astro.config.mjs
+-   **drizzle.config.ts**
+-   …
+</FileTree>
+
+Turso と Drizzle の接続について解説します。
+
+アプリのクライアントは[drizzle について](/reference/code/db/drizzle)に解説しています。
+
+開発時にもデータベースの更新や、型の参照などのために Turso との接続が必要です。
+
+## Turso アカウント
+
+Turso でデータベースを作成し、その URL と認証トークンを取得します。
+`.env`ファイルに以下のように記述します。
+
+```env
+TURSO_DATABASE_URL=libsql://hogefuga
+TURSO_AUTH_TOKEN=foobar
+```
+
+## クライアントの初期化
+
+`/src/lib/drizzle.ts`でアプリがデータベースに接続するためのクライアントを作成します。
+分かりやすい場所であれば、プロジェクト内のどこに配置しても構いません。
+
+クライアントを作成する事で、データベースに対してクエリを実行することができます。
+
+```typescript
+import { drizzle } from "drizzle-orm/libsql/web";
+import { createClient } from "drizzle-kit";
+
+const client = createClient({
+    url:
+        import.meta.env.NODE_ENV === "development"
+            ? "http://127.0.0.1:8080"
+            : import.meta.env.TURSO_DATABASE_URL!,
+    authToken: import.meta.env.TURSO_AUTH_TOKEN,
+});
+
+export const db = drizzle(client);
+```
+
+## Drizzle の設定
+
+`drizzle.config.ts` で開発のための設定を行います。
+
+```typescript
+import { defineConfig } from "drizzle-kit";
+
+export default defineConfig({
+    schema: "./db/schema.ts",
+    out: "./migrations",
+    dialect: "turso",
+    dbCredentials: {
+        url:
+            process.env.NODE_ENV === "development"
+                ? "http://127.0.0.1:8080"
+                : process.env.TURSO_DATABASE_URL!,
+        authToken: process.env.TURSO_AUTH_TOKEN,
+    },
+});
+```
+
+[Schema](/reference/code/db/schema)で説明したスキーマを参照し、マイグレーションファイルを生成します。
+マイグレーションファイルにより、データベースの更新を行います。
+
+## マイグレーション
+
+import { Steps } from "@astrojs/starlight/components";
+
+<Steps>
+1. スキーマの定義を確認します
+
+    今回のプロジェクトでは`/db/schema.ts`でテーブルのスキーマを定義しています。
+
+1.  マイグレーションファイルを生成します。
+
+    ```bash
+    npx drizzle-kit generate
+    ```
+
+1.  マイグレーションを実行します。
+
+        ```bash
+        npx drizzle-kit migrate
+        ```
+
+</Steps>
+
+## 開発
+
+すでに Turso で使用しているデータベースをローカルで使用する事も可能です。
+turso cli と SQLite3 がインストールされていることを確認してください。
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+<Steps>
+
+1.  ローカルにダンプします。
+
+    ```bash
+    turso db shell [db-name] .dump > dump.sql
+
+    # ダウンロードできたら実行
+    cat dump.sql | sqlite3 local.db
+    ```
+
+1.  データベースを接続します
+
+            二通りが可能です。
+            <Tabs>
+                <TabItem label="Turso CLI">
+                ```bash
+                turso dev --db-file local.db
+                ```
+                `http://127.0.0.1:8080`で接続されます。
+                </TabItem>
+                <TabItem label="SQLite">
+                ```typescript
+                import { createClient } from "@libsql/client";
+                const client = createClient({
+                    url: "file:local.db",
+                });
+                ```
+                クライアントの初期化をこのように変更します
+                </TabItem>
+            </Tabs>
+
+</Steps>
+
+これで、開発環境ではローカルのデータベースを使用することができます。
