@@ -2,8 +2,9 @@
 title: Drizzle ORMについて
 description: Drizzle ORMについて解説します。
 ---
+import { FileTree } from '@astrojs/starlight/components';
 
-{% filetree %}
+<FileTree>
 - db
     - **schema.ts**
 - public/
@@ -18,7 +19,7 @@ description: Drizzle ORMについて解説します。
     - …
 - astro.config.mjs
 - …
-{% /filetree %}
+</FileTree>
 
 Drizzle ORMは、TypeScriptで書かれたORMです。
 ORMとは、Object-Relational Mappingの略で、データベースのテーブルをオブジェクトとして扱うためのプログラミングの技法です。
