@@ -88,8 +88,6 @@ description: アプリのロジックなどを説明します。
 - public
     - favicon.ico
     - robots.txt
-- README.md
-- LICENSE
 - src
     - components
         - root/
@@ -126,6 +124,8 @@ description: アプリのロジックなどを説明します。
 - tsconfig.json
 - worker-configuration.d.ts
 - wrangler.json
+- README.md
+- LICENSE
 {% /filetree %}
 
 
@@ -134,15 +134,17 @@ description: アプリのロジックなどを説明します。
 ### 必要なツール
 
 {% steps %}
-1. Gitをダウンロードします  
+1. Gitをダウンロードします
+
     Gitはソースコードのバージョン管理ツールです。
     [Gitの公式サイト](https://git-scm.com/downloads)からダウンロードしてください。
 
-1. Voltaをインストールします。  
-   VoltaはNode.jsバージョン管理ツールで、プロジェクトごとに適切なNode.jsのバージョンを自動で有効にします。  
-   詳細は[Voltaの公式サイト](https://volta.sh)をご参照ください。
+1. Voltaをインストールします。
 
-1. Node.jsをインストールします。  
+    VoltaはNode.jsバージョン管理ツールで、プロジェクトごとに適切なNode.jsのバージョンを自動で有効にします。  
+    詳細は[Voltaの公式サイト](https://volta.sh)をご参照ください。
+
+1. Node.jsをインストールします。
     ```bash
     # Node.jsのバージョンを指定してインストール
     volta install node@22.13.0
@@ -165,10 +167,11 @@ description: アプリのロジックなどを説明します。
 
 1. プロジェクトの環境変数を設定します:
     ```
-    .env.development  
-    .dev.vars.development  
+    .env.development
+    .dev.vars.development
     ```
-    必要な情報は次の通りです:  
+    必要な情報は次の通りです:
+
     - PUBLIC_CLERK_PUBLISHABLE_KEY
     - CLERK_SECRET_KEY
     - TURSO_DATABASE_URL
@@ -184,10 +187,10 @@ description: アプリのロジックなどを説明します。
     これで環境変数の設定ファイルが作成されます。
 
 1. ローカル開発サーバーを起動します:
-   ```bash
-   npm run dev
-   ```
-   サーバーが起動すると、ターミナル上にURLが表示されるので、ブラウザでアクセスし動作確認を行ってください。
+    ```bash
+    npm run dev
+    ```
+    サーバーが起動すると、ターミナル上にURLが表示されるので、ブラウザでアクセスし動作確認を行ってください。
 
 {% /steps %}
 
