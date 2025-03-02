@@ -3,10 +3,14 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import markdoc from '@astrojs/markdoc';
 
+import sitemap from "@astrojs/sitemap";
+
 // https://astro.build/config
 export default defineConfig({
+    site: "https://docs.omu-aikido.com",
     integrations: [
         markdoc(),
+        sitemap(),
         starlight({
             title: "OMU-AIKIDO Docs",
             defaultLocale: "root",
